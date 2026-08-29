@@ -16,6 +16,8 @@ struct HomeView: View {
         List {
         
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.theme.surfaceSecondary)
         .navigationTitle("Hello <User> 👋")
         NavigationLink{
             MaintLogForm()
@@ -30,6 +32,7 @@ struct HomeView: View {
                 }
         }
     }
+    //(Color.theme.actionPrimary)
 }
 
 #Preview {

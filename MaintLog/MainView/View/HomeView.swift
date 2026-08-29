@@ -16,7 +16,7 @@ struct HomeView: View {
         List {
         
         }
-        Button{
+        NavigationLink{
             MaintLogForm()
         } label: {
             RoundedRectangle(cornerRadius: 10)
@@ -32,5 +32,8 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    NavigationStack {
+        HomeView()
+    }
+  //  HomeView()
 }

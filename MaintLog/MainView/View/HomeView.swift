@@ -16,16 +16,17 @@ struct HomeView: View {
         List {
         
         }
+        .navigationTitle("Hello <User> 👋")
         NavigationLink{
             MaintLogForm()
         } label: {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 25)
                 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
                 .padding()
-                .foregroundStyle(Color.red)
+                .foregroundStyle(Color.theme.actionPrimary)
                 .overlay{
                     Text("Create new MainLog")
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Color.theme.textInverse)
                 }
         }
     }

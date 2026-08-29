@@ -16,6 +16,7 @@ struct HomeTabView: View {
                 }
             }
         }
+        .tint(Color.theme.actionPressed)
     }
 }
 

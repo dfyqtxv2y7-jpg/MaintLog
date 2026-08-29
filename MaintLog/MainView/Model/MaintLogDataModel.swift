@@ -19,9 +19,12 @@ final class MaintLogDataModel {
     
     //--FLIGHT
     var departurePreviousAirport: String
+    var departurePreviousTime: Date?
     var arrivalPreviousAirport: String?
+    var arrivalPreviousTime: Date?
     var flightNumberPreviousFlight: String
     var departureScheduleAirport: String?
+    var departureScheduleTime: Date?
     var arrivalScheduleAirport: String?
     var flightNumberScheduleFlight: String?
     
@@ -49,9 +52,12 @@ final class MaintLogDataModel {
     init(id: UUID,
          mainLogNumber: String,
          departurePreviousAirport: String,
+         departurePreviousTime: Date? = nil,
          arrivalPreviousAirport: String? = nil,
+         arrivalPreviousTime: Date? = nil,
          flightNumberPreviousFlight: String,
          departureScheduleAirport: String? = nil,
+         departureScheduleTime: Date? = nil,
          arrivalScheduleAirport: String? = nil,
          flightNumberScheduleFlight: String? = nil,
          aircraftRegistration: String,
@@ -73,9 +79,12 @@ final class MaintLogDataModel {
         self.id = id
         self.mainLogNumber = mainLogNumber
         self.departurePreviousAirport = departurePreviousAirport
+        self.departurePreviousTime = departurePreviousTime
         self.arrivalPreviousAirport = arrivalPreviousAirport
+        self.arrivalPreviousTime = arrivalPreviousTime
         self.flightNumberPreviousFlight = flightNumberPreviousFlight
         self.departureScheduleAirport = departureScheduleAirport
+        self.departureScheduleTime = departureScheduleTime
         self.arrivalScheduleAirport = arrivalScheduleAirport
         self.flightNumberScheduleFlight = flightNumberScheduleFlight
         self.aircraftRegistration = aircraftRegistration

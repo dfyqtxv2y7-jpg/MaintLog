@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MaintLogApp: App {
@@ -13,5 +14,11 @@ struct MaintLogApp: App {
         WindowGroup {
             HomeView()
         }
+        .modelContainer(
+            for: [
+                MaintLogDataModel.self,
+                CustomerDataModel.self
+            ]
+        )
     }
 }

@@ -6,14 +6,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
+    
+    @Environment(\.modelContext) private var modelContext
+
     var body: some View {
         List {
         
         }
-        Button("Add new log") {
-            
+        Button{
+            MaintLogForm()
+        } label: {
+            RoundedRectangle(cornerRadius: 10)
+                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
+                .padding()
+                .foregroundStyle(Color.red)
+                .overlay{
+                    Text("Create new MainLog")
+                        .foregroundStyle(Color.white)
+                }
         }
     }
 }

@@ -12,7 +12,9 @@ struct HomeView: View {
         List {
         
         }
-        NavigationLink()
+        Button("Add new log") {
+            
+        }
     }
 }
 

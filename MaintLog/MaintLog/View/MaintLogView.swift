@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct MainLogView: View {
+struct MaintLogView: View {
     var body: some View {
         Text("MaintLOgView")
     }
 }
 
 #Preview {
-    MainLogView()
+    MaintLogView()
 }

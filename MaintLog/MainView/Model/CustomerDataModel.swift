@@ -14,21 +14,22 @@ import SwiftData
     var id: UUID
     
     var name: String
-    var shortName: String
+    var shortName: String?
     var iataCode: String
     var icaoCode: String
     var isActive: Bool
     
-    init(id: UUID,
+    init(id: UUID = UUID(),
          name: String,
-         shortName: String,
+         shortName: String? = nil,
          iataCode: String,
          icaoCode: String,
-         isActive: Bool)
+         isActive: Bool = true
+    )
     {
         self.id = id
         self.name = name
-        self.shortName = shortName
+        self.shortName = shortName ?? iataCode
         self.iataCode = iataCode
         self.icaoCode = icaoCode
         self.isActive = isActive

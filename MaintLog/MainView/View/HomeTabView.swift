@@ -15,6 +15,16 @@ struct HomeTabView: View {
                     HomeView()
                 }
             }
+            Tab("Inventory", systemImage: "shippingbox.fill"){
+                NavigationStack(){
+                    InventoryView()
+                }
+            }
+            Tab("Customer", systemImage: "person.spatialaudio.stereo.fill"){
+                NavigationStack(){
+                    CustomerView()
+                }
+            }
         }
         .tint(Color.theme.actionPressed)
     }

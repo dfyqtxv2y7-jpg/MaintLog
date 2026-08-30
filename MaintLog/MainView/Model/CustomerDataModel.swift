@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-final class CustomerDataModel{
+@Model final class CustomerDataModel{
     
     @Attribute(.unique)
     var id: UUID

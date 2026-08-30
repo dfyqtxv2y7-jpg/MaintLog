@@ -12,7 +12,7 @@ import SwiftData
 struct MaintLogApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            HomeTabView()
         }
         .modelContainer(
             for: [

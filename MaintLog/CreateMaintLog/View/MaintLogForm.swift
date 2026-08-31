@@ -37,17 +37,55 @@ struct MaintLogForm: View {
         ZStack{
             Color.theme.surfacePrimary
                 .ignoresSafeArea()
-            VStack{
-                
+            ScrollView {
+                VStack{
+                    HStack {
+                        Text("Please Enter information about services")
+                            .foregroundStyle(Color.theme.textSecondary)
+                            .font(Font.default)
+                            .padding(.horizontal, 20)
+                        Spacer()
+                    }
+                    
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.theme.borderDefault)
+                        .frame(
+                            maxWidth: .infinity,
+                            minHeight: 220
+                        )
+                        .overlay(alignment: .topLeading) {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Aircraft Information")
+                                    .font(Font.title3)
+                                    .fontWeight(.semibold)
+                                
+                                Divider()
+                                
+                                registrationForm()
+                                
+                                HStack{
+                                    
+                                aircraftTypeForm()
+                                    
+                                clientForm()
+                                }
+                            }
+                            .padding()
+                            .frame(
+                                maxWidth: .infinity,
+                                alignment: .leading
+                            )
+                        }
+                        .padding(.horizontal, 20)
+                }
+                .navigationTitle(Text("MaintLog"))
             }
-            .navigationTitle(Text("MaintLog"))
         }
     }
 }
 
 #Preview {
-//    MaintLogForm(
-//    )
+
     NavigationStack{
         MaintLogForm()
             .modelContainer(
@@ -58,4 +96,98 @@ struct MaintLogForm: View {
                 inMemory: true
             )
     }
+}
+
+
+extension MaintLogForm{
+    
+    private func registrationForm() -> some View{
+        VStack(alignment: .leading) {
+            Text("Aircraft Registration *")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            
+            HStack(spacing: 5){
+                Image(systemName: "airplane.path.dotted")
+                Divider()
+                    .frame(width: 5)
+                TextField(
+                    "np. SP-LRA",
+                    text: $aircraftRegistration
+                )
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.characters)
+            }
+            .padding(.horizontal)
+            .frame(height: 45)
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
+    }
+    
+    private func aircraftTypeForm() -> some View{
+        VStack(alignment: .leading) {
+            Text("Aircraft Type *")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            HStack(spacing: 5){
+                Image(systemName: "airplane.path.dotted")
+                Divider()
+                    .frame(width: 5)
+                TextField(
+                    "np. B787",
+                    text: $aircraftType
+                )
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.characters)
+            }
+            .padding(.horizontal)
+            .frame(height: 45)
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+                
+            }
+        }
+    }
+    
+//    private func clientForm() -> some View{
+//        VStack(alignment: .leading) {
+//            Picker("Client", selection: $customer){
+//                
+//            }
+////            Text("Aircraft Type *")
+////                .foregroundStyle(Color.theme.textPrimary)
+////                .font(Font.callout)
+////                .fontWeight(.semibold)
+////            HStack(spacing: 5){
+////                Image(systemName: "airplane.path.dotted")
+////                Divider()
+////                    .frame(width: 5)
+////                TextField(
+////                    "np. B787",
+////                    text: $aircraftType
+////                )
+////                .autocorrectionDisabled(true)
+////                .textInputAutocapitalization(.characters)
+////            }
+////            .padding(.horizontal)
+////            .frame(height: 45)
+////            .background(Color.theme.fieldBackground)
+////            .clipShape(RoundedRectangle(cornerRadius: 14))
+////            .overlay{
+////                RoundedRectangle(cornerRadius: 14)
+////                    .stroke(Color.theme.borderDefault)
+////                
+////            }
+//        }
+//    }
 }

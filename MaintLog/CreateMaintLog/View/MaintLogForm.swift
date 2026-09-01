@@ -10,8 +10,13 @@ import SwiftData
 
 struct MaintLogForm: View {
     
+    
+    //--SWIFT DATA + ENV
     @Query(sort: \CustomerDataModel.name)
     private var customer: [CustomerDataModel]
+    
+    @Environment(\.modelContext)
+    private var modelContext
     
     //--DATA MODEL
     @State private var departurePreviousAirport = ""
@@ -31,6 +36,15 @@ struct MaintLogForm: View {
     @State private var status = "open"
     
     //--CUSTOMER LOGIC
+    @State private var showCustomerPicker = false
+    @State private var selectedCustomerID: UUID? = nil
+    @State private var customerSearch = ""
+    
+    private var selectedCustomer: CustomerDataModel? {
+        customer.first {
+            $0.id == selectedCustomerID
+        }
+    }
     
     
     var body: some View {
@@ -81,6 +95,18 @@ struct MaintLogForm: View {
                 .navigationTitle(Text("MaintLog"))
             }
         }
+        
+        .task {
+            do {
+                try CustomerSeedDB.CustomerDB(
+                    into: modelContext
+                )
+            } catch {
+                print(
+                    "Customer seed error: \(error)"
+                )
+            }
+        }
     }
 }
 
@@ -93,8 +119,8 @@ struct MaintLogForm: View {
                     MaintLogDataModel.self,
                     CustomerDataModel.self
                 ],
-                inMemory: true
-            )
+                inMemory: false
+        )
     }
 }
 
@@ -159,35 +185,114 @@ extension MaintLogForm{
         }
     }
     
-//    private func clientForm() -> some View{
-//        VStack(alignment: .leading) {
-//            Picker("Client", selection: $customer){
-//                
-//            }
-////            Text("Aircraft Type *")
-////                .foregroundStyle(Color.theme.textPrimary)
-////                .font(Font.callout)
-////                .fontWeight(.semibold)
-////            HStack(spacing: 5){
-////                Image(systemName: "airplane.path.dotted")
-////                Divider()
-////                    .frame(width: 5)
-////                TextField(
-////                    "np. B787",
-////                    text: $aircraftType
-////                )
-////                .autocorrectionDisabled(true)
-////                .textInputAutocapitalization(.characters)
-////            }
-////            .padding(.horizontal)
-////            .frame(height: 45)
-////            .background(Color.theme.fieldBackground)
-////            .clipShape(RoundedRectangle(cornerRadius: 14))
-////            .overlay{
-////                RoundedRectangle(cornerRadius: 14)
-////                    .stroke(Color.theme.borderDefault)
-////                
-////            }
-//        }
-//    }
+    private func clientForm() -> some View{
+        VStack(alignment: .leading, spacing: 0) {
+                Text("Client *")
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            
+            Button{
+                showCustomerPicker = true
+            } label: {
+                HStack(){
+                    Image(systemName: "person.2")
+                    
+                    Divider()
+                        .frame(width: 24)
+                    
+                    Text(
+                        selectedCustomer?.name ?? "Choose client"
+                    )
+                    .lineLimit(1)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                }
+                .padding(.horizontal)
+                .frame(height: 45)
+                .background(Color.theme.fieldBackground)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay{
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.theme.borderDefault)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+        .sheet(isPresented: $showCustomerPicker) {
+            customerPickerSheet
+        }
+    }
+    
+    private var customerPickerSheet: some View {
+        NavigationStack {
+            List(filteredCustomers, id: \.id) { customer in
+                Button {
+                    selectedCustomerID = customer.id
+                    showCustomerPicker = false
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(customer.name)
+
+                            Text(
+                                "\(customer.iataCode) / \(customer.icaoCode)"
+                            )
+                            .font(.caption)
+                            .foregroundStyle(
+                                Color.theme.textSecondary
+                            )
+                        }
+
+                        Spacer()
+
+                        if selectedCustomerID == customer.id {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+            .overlay {
+                if filteredCustomers.isEmpty {
+                    ContentUnavailableView(
+                        "Brak klientów",
+                        systemImage: "person.2.slash",
+                        description: Text(
+                            customerSearch.isEmpty
+                                ? "Baza klientów jest pusta."
+                                : "Nie znaleziono pasującego klienta."
+                        )
+                    )
+                }
+            }
+            .navigationTitle("Please Choose Client")
+            .searchable(
+                text: $customerSearch,
+                prompt: "Find a client"
+                
+            )
+        }
+        .presentationDetents([.medium, .large])
+    }
+    
+    private var filteredCustomers: [CustomerDataModel] {
+        customer.filter { customer in
+            customer.isActive &&
+            (
+                customerSearch.isEmpty ||
+                customer.name.localizedCaseInsensitiveContains(
+                    customerSearch
+                ) ||
+                customer.iataCode.localizedCaseInsensitiveContains(
+                    customerSearch
+                ) ||
+                customer.icaoCode.localizedCaseInsensitiveContains(
+                    customerSearch
+                )
+            )
+        }
+    }
 }

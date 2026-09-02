@@ -20,7 +20,7 @@ final class MaintLogDataModel {
     //--FLIGHT
     var departurePreviousAirport: String
     var departurePreviousTime: Date?
-    var arrivalPreviousAirport: String?
+    var arrivalPreviousAirport: String
     var arrivalPreviousTime: Date?
     var flightNumberPreviousFlight: String
     var departureScheduleAirport: String?
@@ -53,7 +53,7 @@ final class MaintLogDataModel {
          mainLogNumber: String,
          departurePreviousAirport: String,
          departurePreviousTime: Date? = nil,
-         arrivalPreviousAirport: String? = nil,
+         arrivalPreviousAirport: String,
          arrivalPreviousTime: Date? = nil,
          flightNumberPreviousFlight: String,
          departureScheduleAirport: String? = nil,

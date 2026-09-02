@@ -21,7 +21,7 @@ struct MaintLogForm: View {
     //--DATA MODEL
     @State private var departurePreviousAirport = ""
     @State private var departurePreviousTime: Date? = nil
-    @State private var arrivalPreviousAirport: String? = nil
+    @State private var arrivalPreviousAirport = ""
     @State private var arrivalPreviousTime: Date? = nil
     @State private var flightNumberPreviousFlight = ""
     @State private var departureScheduleAirport: String? = nil
@@ -64,38 +64,10 @@ struct MaintLogForm: View {
                         Spacer()
                     }
                     
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.theme.borderDefault)
-                        .frame(
-                            maxWidth: .infinity,
-                            minHeight: 325
-                        )
-                        .overlay(alignment: .topLeading) {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Aircraft Information")
-                                    .font(Font.title3)
-                                    .fontWeight(.semibold)
-                                
-                                Divider()
-                                
-                                registrationForm()
-                                
-                                HStack{
-                                    
-                                aircraftTypeForm()
-                                    
-                                }
-                                
-                                clientForm()
+                    aircraftInformationTable()
+                    
+                    arrivalInfoTab()
 
-                            }
-                            .padding()
-                            .frame(
-                                maxWidth: .infinity,
-                                alignment: .leading
-                            )
-                        }
-                        .padding(.horizontal, 20)
                 }
                 .navigationTitle(Text("MaintLog"))
             }
@@ -146,6 +118,126 @@ struct MaintLogForm: View {
 
 
 extension MaintLogForm{
+    
+    private func aircraftInformationTable() -> some View{
+        RoundedRectangle(cornerRadius: 20)
+            .stroke(Color.theme.borderDefault)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 325
+            )
+            .overlay(alignment: .topLeading) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Aircraft Information")
+                        .font(Font.title3)
+                        .fontWeight(.semibold)
+                    
+                    Divider()
+                    
+                    registrationForm()
+                    
+                    HStack{
+                    aircraftTypeForm()
+                    }
+                    
+                    clientForm()
+
+                }
+                .padding()
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .leading
+                )
+            }
+            .padding(.horizontal, 20)
+        
+    }
+    
+    private func arrivalInfoTab() -> some View{
+        RoundedRectangle(cornerRadius: 20)
+            .stroke(Color.theme.borderDefault)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 325
+            )
+            .overlay(alignment: .topLeading) {
+                HStack(spacing: 0) {
+                    
+                    fromLabel()
+                    
+                    flightNoLabel()
+                    
+                }
+                .padding(.horizontal, 0)
+            }
+            .padding(.horizontal, 20)
+    }
+    
+    private func fromLabel() -> some View{
+        VStack(alignment: .leading, spacing: 10) {
+            Text("From")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            HStack(spacing: 5){
+                Image(systemName: "airplane.arrival")
+                Divider()
+                    .frame(width: 5)
+                TextField(
+                    "JFK",
+                    text: $arrivalPreviousAirport
+                )
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.characters)
+            }
+            .padding(.horizontal)
+            .frame(height: 45)
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
+        .padding()
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
+    }
+    
+    private func  flightNoLabel() -> some View{
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Flight Number")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            HStack(spacing: 5){
+                Image(systemName: "airplane.ticket")
+                Divider()
+                    .frame(width: 5)
+                TextField(
+                    "JFK",
+                    text: $flightNumberPreviousFlight
+                )
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.characters)
+            }
+            .padding(.horizontal)
+            .frame(height: 45)
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
+        .padding()
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
+    }
     
     private func registrationForm() -> some View{
         VStack(alignment: .leading) {

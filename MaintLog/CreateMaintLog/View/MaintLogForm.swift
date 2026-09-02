@@ -35,6 +35,9 @@ struct MaintLogForm: View {
     @State private var station = ""
     @State private var status = "open"
     
+    //--UI
+    @State private var textSize: Int = 14
+    
     //--CUSTOMER LOGIC
     @State private var showCustomerPicker = false
     @State private var selectedCustomerID: UUID? = nil
@@ -65,7 +68,7 @@ struct MaintLogForm: View {
                         .stroke(Color.theme.borderDefault)
                         .frame(
                             maxWidth: .infinity,
-                            minHeight: 220
+                            minHeight: 325
                         )
                         .overlay(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 10) {
@@ -81,8 +84,10 @@ struct MaintLogForm: View {
                                     
                                 aircraftTypeForm()
                                     
-                                clientForm()
                                 }
+                                
+                                clientForm()
+
                             }
                             .padding()
                             .frame(
@@ -122,6 +127,21 @@ struct MaintLogForm: View {
                 inMemory: false
         )
     }
+}
+
+#Preview {
+
+    NavigationStack{
+        MaintLogForm()
+            .modelContainer(
+                for: [
+                    MaintLogDataModel.self,
+                    CustomerDataModel.self
+                ],
+                inMemory: false
+        )
+    }
+    .environment(\.colorScheme, .dark)
 }
 
 
@@ -186,8 +206,9 @@ extension MaintLogForm{
     }
     
     private func clientForm() -> some View{
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading) {
                 Text("Client *")
+                .foregroundStyle(Color.theme.textPrimary)
                 .font(Font.callout)
                 .fontWeight(.semibold)
             
@@ -198,7 +219,7 @@ extension MaintLogForm{
                     Image(systemName: "person.2")
                     
                     Divider()
-                        .frame(width: 24)
+                        .frame(width: 5)
                     
                     Text(
                         selectedCustomer?.name ?? "Choose client"
@@ -268,7 +289,7 @@ extension MaintLogForm{
                     )
                 }
             }
-            .navigationTitle("Please Choose Client")
+            .navigationTitle("Please Chose Client")
             .searchable(
                 text: $customerSearch,
                 prompt: "Find a client"

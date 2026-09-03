@@ -67,6 +67,8 @@ struct MaintLogForm: View {
                     aircraftInformationTable()
                     
                     arrivalInfoTab()
+                    
+                    
 
                 }
                 .navigationTitle(Text("MaintLog"))
@@ -158,10 +160,17 @@ extension MaintLogForm{
             .stroke(Color.theme.borderDefault)
             .frame(
                 maxWidth: .infinity,
-                minHeight: 325
+                minHeight: 290
             )
             .overlay(alignment: .topLeading) {
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 10) {
+                    
+                    Text("Arrival Information")
+                        .font(Font.title3)
+                        .fontWeight(.semibold)
+                    
+                    Divider()
+
                     HStack(spacing: 0) {
                         
                         fromLabel()
@@ -169,10 +178,14 @@ extension MaintLogForm{
                         flightNoLabel()
                         
                     }
+                    .padding(.horizontal, -15)
+                    .padding(.top, -10)
+                    
                     arrivalDateLabel()
-                        .padding(.horizontal)
+                        .padding(.horizontal, 0)
                 }
-                    .padding(.horizontal,0)
+                    .padding(.horizontal,20)
+                    .padding(.top, 10)
                 
             }
             .padding(.horizontal, 20)
@@ -252,12 +265,13 @@ extension MaintLogForm{
                 .fontWeight(.semibold)
         
             HStack(alignment: .center ,spacing: 0){
-                
+                Spacer()
             Image(systemName: "airplane.ticket")
                     .scaleEffect(1.17)
                     .padding(.horizontal, 10)
                 
             Divider()
+                    .frame(width: 0)
                 
             DatePicker("Select Date", selection: $arrivalPreviousTime)
                         .datePickerStyle(.wheel)

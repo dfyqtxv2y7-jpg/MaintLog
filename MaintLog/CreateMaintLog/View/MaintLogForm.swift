@@ -22,7 +22,7 @@ struct MaintLogForm: View {
     @State private var departurePreviousAirport = ""
     @State private var departurePreviousTime: Date? = nil
     @State private var arrivalPreviousAirport = ""
-    @State private var arrivalPreviousTime: Date? = nil
+    @State private var arrivalPreviousTime = Date()
     @State private var flightNumberPreviousFlight = ""
     @State private var departureScheduleAirport: String? = nil
     @State private var departureScheduleTime: Date? = nil
@@ -161,14 +161,19 @@ extension MaintLogForm{
                 minHeight: 325
             )
             .overlay(alignment: .topLeading) {
-                HStack(spacing: 0) {
-                    
-                    fromLabel()
-                    
-                    flightNoLabel()
-                    
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 0) {
+                        
+                        fromLabel()
+                        
+                        flightNoLabel()
+                        
+                    }
+                    arrivalDateLabel()
+                        .padding(.horizontal)
                 }
-                .padding(.horizontal, 0)
+                    .padding(.horizontal,0)
+                
             }
             .padding(.horizontal, 20)
     }
@@ -237,6 +242,39 @@ extension MaintLogForm{
             maxWidth: .infinity,
             alignment: .leading
         )
+    }
+    
+    private func arrivalDateLabel() -> some View{
+        VStack(alignment: .leading){
+            Text("Arrival Date")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+        
+            HStack(alignment: .center ,spacing: 0){
+                
+            Image(systemName: "airplane.ticket")
+                    .scaleEffect(1.17)
+                    .padding(.horizontal, 10)
+                
+            Divider()
+                
+            DatePicker("Select Date", selection: $arrivalPreviousTime)
+                        .datePickerStyle(.wheel)
+            }
+            .scaleEffect(0.90)
+            .padding(.horizontal)
+            .frame(height: 75)
+            .frame(minWidth: 325
+                   , maxWidth: .infinity
+            )
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
     }
     
     private func registrationForm() -> some View{

@@ -36,7 +36,7 @@ struct MaintLogForm: View {
     @State private var status = "open"
     
     //--UI
-    @State private var textSize: Int = 14
+//  @State private var textSize: Int = 14
     
     //--CUSTOMER LOGIC
     @State private var showCustomerPicker = false
@@ -68,7 +68,39 @@ struct MaintLogForm: View {
                     
                     arrivalInfoTab()
                     
-                    
+                    departureInfoTab()
+                                        
+                    HStack {
+                        
+                        Button(role: .cancel){
+                            
+                        } label: {
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(width: 100, height: 75)
+                                .padding()
+                                .foregroundStyle(Color.theme.dangerForeground)
+                                .overlay{
+                                    Text("Reset")
+                                        .foregroundStyle(Color.theme.textInverse)
+                                    
+                                    // do zmiany caly kontener
+                                }
+                        }
+                        NavigationLink{
+                            MaintLogForm()
+                        } label: {
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
+                                .padding()
+                                .foregroundStyle(Color.theme.actionPrimary)
+                                .overlay{
+                                    Text("Create new MainLog")
+                                        .foregroundStyle(Color.theme.textInverse)
+                                    
+                                    // do zmiany caly kontener
+                                }
+                        }
+                    }
 
                 }
                 .navigationTitle(Text("MaintLog"))
@@ -183,6 +215,44 @@ extension MaintLogForm{
                     
                     arrivalDateLabel()
                         .padding(.horizontal, 0)
+                }
+                    .padding(.horizontal,20)
+                    .padding(.top, 10)
+                
+            }
+            .padding(.horizontal, 20)
+    }
+    
+    private func departureInfoTab() -> some View{
+        RoundedRectangle(cornerRadius: 20)
+            .stroke(Color.theme.borderDefault)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 290
+            )
+            .overlay(alignment: .topLeading) {
+                VStack(alignment: .leading, spacing: 10) {
+                    
+                    Text("Depature Information")
+                        .font(Font.title3)
+                        .fontWeight(.semibold)
+                    
+                    Divider()
+
+                    HStack(spacing: 0) {
+                        
+                        fromLabel()
+                        
+                        flightNoLabel()
+                        // do zmiany
+                        
+                    }
+                    .padding(.horizontal, -15)
+                    .padding(.top, -10)
+                    
+                    arrivalDateLabel()
+                        .padding(.horizontal, 0)
+                    //do zmiany 
                 }
                     .padding(.horizontal,20)
                     .padding(.top, 10)

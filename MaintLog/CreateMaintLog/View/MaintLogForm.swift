@@ -24,10 +24,10 @@ struct MaintLogForm: View {
     @State private var arrivalPreviousAirport = ""
     @State private var arrivalPreviousTime = Date()
     @State private var flightNumberPreviousFlight = ""
-    @State private var departureScheduleAirport: String? = nil
-    @State private var departureScheduleTime: Date? = nil
+    @State private var departureScheduleAirport = ""
+    @State private var departureScheduleTime = Date()
     @State private var arrivalScheduleAirport: String? = nil
-    @State private var flightNumberScheduleFlight: String? = nil
+    @State private var flightNumberScheduleFlight = ""
     @State private var aircraftRegistration = ""
     @State private var aircraftType = ""
     @State private var aircraftSubType = ""
@@ -35,8 +35,8 @@ struct MaintLogForm: View {
     @State private var station = ""
     @State private var status = "open"
     
-    //--UI
-//  @State private var textSize: Int = 14
+    //--ALERT
+    @State private var showResetAlert = false
     
     //--CUSTOMER LOGIC
     @State private var showCustomerPicker = false
@@ -73,29 +73,38 @@ struct MaintLogForm: View {
                     HStack {
                         
                         Button(role: .cancel){
-                            
+                            resetButton()
                         } label: {
                             RoundedRectangle(cornerRadius: 25)
                                 .frame(width: 100, height: 75)
-                                .padding()
+                                .padding(.leading, 20)
                                 .foregroundStyle(Color.theme.dangerForeground)
                                 .overlay{
+                                    Spacer()
                                     Text("Reset")
                                         .foregroundStyle(Color.theme.textInverse)
-                                    
+                                    Spacer()
+
                                     // do zmiany caly kontener
                                 }
                         }
+                        
+                        //--
+                        
+                        //--
                         NavigationLink{
                             MaintLogForm()
                         } label: {
                             RoundedRectangle(cornerRadius: 25)
                                 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
-                                .padding()
+                                .padding(.trailing, 20)
                                 .foregroundStyle(Color.theme.actionPrimary)
                                 .overlay{
+                                    Spacer()
                                     Text("Create new MainLog")
                                         .foregroundStyle(Color.theme.textInverse)
+                                    Spacer()
+
                                     
                                     // do zmiany caly kontener
                                 }
@@ -104,6 +113,11 @@ struct MaintLogForm: View {
 
                 }
                 .navigationTitle(Text("MaintLog"))
+            }
+            .alert("FORM HAS BEEN RESET", isPresented: $showResetAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("ALL FIELD HAS BEEN RESET")
             }
         }
         
@@ -241,10 +255,9 @@ extension MaintLogForm{
 
                     HStack(spacing: 0) {
                         
-                        fromLabel()
+                        toLabel()
                         
-                        flightNoLabel()
-                        // do zmiany
+                        flightNoLabelDep()
                         
                     }
                     .padding(.horizontal, -15)
@@ -272,7 +285,7 @@ extension MaintLogForm{
                 Divider()
                     .frame(width: 5)
                 TextField(
-                    "JFK",
+                    "WAW",
                     text: $arrivalPreviousAirport
                 )
                 .autocorrectionDisabled(true)
@@ -305,7 +318,7 @@ extension MaintLogForm{
                 Divider()
                     .frame(width: 5)
                 TextField(
-                    "JFK",
+                    "LO27",
                     text: $flightNumberPreviousFlight
                 )
                 .autocorrectionDisabled(true)
@@ -344,6 +357,106 @@ extension MaintLogForm{
                     .frame(width: 0)
                 
             DatePicker("Select Date", selection: $arrivalPreviousTime)
+                        .datePickerStyle(.wheel)
+            }
+            .scaleEffect(0.90)
+            .padding(.horizontal)
+            .frame(height: 75)
+            .frame(minWidth: 325
+                   , maxWidth: .infinity
+            )
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
+    }
+    
+    private func toLabel() -> some View{
+        VStack(alignment: .leading, spacing: 10) {
+            Text("To")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            HStack(spacing: 5){
+                Image(systemName: "airplane.departure")
+                Divider()
+                    .frame(width: 5)
+                TextField(
+                    "JFK",
+                    text: $departureScheduleAirport
+                )
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.characters)
+            }
+            .padding(.horizontal)
+            .frame(height: 45)
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
+        .padding()
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
+    }
+    
+    private func  flightNoLabelDep() -> some View{
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Flight Number")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+            HStack(spacing: 5){
+                Image(systemName: "airplane.ticket")
+                Divider()
+                    .frame(width: 5)
+                TextField(
+                    "LO2137",
+                    text: $flightNumberScheduleFlight
+                )
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.characters)
+            }
+            .padding(.horizontal)
+            .frame(height: 45)
+            .background(Color.theme.fieldBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay{
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+        }
+        .padding()
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
+    }
+    
+    private func departureDateLabel() -> some View{
+        VStack(alignment: .leading){
+            Text("Departure Date")
+                .foregroundStyle(Color.theme.textPrimary)
+                .font(Font.callout)
+                .fontWeight(.semibold)
+        
+            HStack(alignment: .center ,spacing: 0){
+                Spacer()
+            Image(systemName: "airplane.ticket")
+                    .scaleEffect(1.17)
+                    .padding(.horizontal, 10)
+                
+            Divider()
+                    .frame(width: 0)
+                
+            DatePicker("Select Date", selection: $departureScheduleTime)
                         .datePickerStyle(.wheel)
             }
             .scaleEffect(0.90)
@@ -529,5 +642,28 @@ extension MaintLogForm{
                 )
             )
         }
+    }
+    
+    //--  RESET BUTTON
+    
+    private func resetButton() {
+         departurePreviousAirport = ""
+         departurePreviousTime = Date()
+         arrivalPreviousAirport = ""
+         arrivalPreviousTime = Date()
+         flightNumberPreviousFlight = ""
+         departureScheduleAirport = ""
+         departureScheduleTime = Date()
+         arrivalScheduleAirport = ""
+         flightNumberScheduleFlight = ""
+         aircraftRegistration = ""
+         aircraftType = ""
+         aircraftSubType = ""
+         referenceNo = ""
+         station = ""
+         status = "open"
+         customerSearch = ""
+        
+         showResetAlert = true
     }
 }

@@ -41,7 +41,7 @@ final class MaintLogDataModel {
     var hasPlannedWork: Bool?
     var hasOilUplift: Bool?
     var hasReport: Bool?
-    var customer: String?
+    var customer: CustomerDataModel?
     
     //--audit
     var createdBy: String?
@@ -70,7 +70,7 @@ final class MaintLogDataModel {
          hasPlannedWork: Bool? = nil,
          hasOilUplift: Bool? = nil,
          hasReport: Bool? = nil,
-         customer: String? = nil,
+         customer: CustomerDataModel? = nil,
          createdBy: String? = nil,
          updatedBy: String? = nil,
          createdAt: Date? = nil,

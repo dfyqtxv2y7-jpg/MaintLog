@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import Combine
 
 @Model final class CustomerDataModel{
     
@@ -18,6 +19,13 @@ import SwiftData
     var iataCode: String
     var icaoCode: String
     var isActive: Bool
+    
+    //--RELATION
+    @Relationship(
+        deleteRule: .nullify,
+        inverse: \MaintLogDataModel.customer
+    )
+    var maintLogs: [MaintLogDataModel] = []
     
     init(id: UUID = UUID(),
          name: String,

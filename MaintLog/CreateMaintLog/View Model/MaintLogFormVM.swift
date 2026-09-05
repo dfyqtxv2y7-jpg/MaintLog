@@ -55,7 +55,7 @@ import Combine
         hasPlannedWork: Bool? = nil,
         hasOilUplift: Bool? = nil,
         hasReport: Bool? = nil,
-        customer: String? = nil,
+        customer: CustomerDataModel? = nil,
         createdBy: String? = nil,
         updatedBy: String? = nil,
         createdAt: Date? = nil,

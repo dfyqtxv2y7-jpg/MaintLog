@@ -114,7 +114,7 @@ struct MaintLogForm: View {
                                 referenceNo: referenceNo,
                                 station: station,
                                 status: status,
-                                customer: selectedCustomer?.name
+                                customer: selectedCustomer
                                 )
                         } label: {
                             RoundedRectangle(cornerRadius: 25)

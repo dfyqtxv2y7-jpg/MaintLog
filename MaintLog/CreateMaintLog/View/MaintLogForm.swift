@@ -49,6 +49,10 @@ struct MaintLogForm: View {
         }
     }
     
+    //--VM/FUNC
+    @StateObject private var viewModel = MaintLogFormVM()
+    @State private var createdLog: MaintLogDataModel?
+    
     
     var body: some View {
         ZStack{
@@ -92,8 +96,26 @@ struct MaintLogForm: View {
                         //--
                         
                         //--
-                        NavigationLink{
-                            MaintLogForm()
+                        Button(role: .cancel){
+                            createdLog = viewModel.saveMaintLogForm(
+                                in: modelContext,
+                                departurePreviousAirport: departurePreviousAirport,
+                                departurePreviousTime: departurePreviousTime,
+                                arrivalPreviousAirport: arrivalPreviousAirport,
+                                arrivalPreviousTime: arrivalPreviousTime,
+                                flightNumberPreviousFlight: flightNumberPreviousFlight,
+                                departureScheduleAirport: departureScheduleAirport,
+                                departureScheduleTime: departureScheduleTime,
+                                arrivalScheduleAirport: arrivalScheduleAirport,
+                                flightNumberScheduleFlight: flightNumberScheduleFlight,
+                                aircraftRegistration: aircraftRegistration,
+                                aircraftType: aircraftType,
+                                aircraftSubType: aircraftSubType,
+                                referenceNo: referenceNo,
+                                station: station,
+                                status: status,
+                                customer: selectedCustomer?.name
+                                )
                         } label: {
                             RoundedRectangle(cornerRadius: 25)
                                 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
@@ -104,10 +126,13 @@ struct MaintLogForm: View {
                                     Text("Create new MainLog")
                                         .foregroundStyle(Color.theme.textInverse)
                                     Spacer()
-
-                                    
-                                    // do zmiany caly kontener
-                                }
+                            }
+                        }
+                        .navigationDestination(item: $createdLog) {
+                            log in
+                            MaintLogView(
+                                log: log
+                            )
                         }
                     }
 

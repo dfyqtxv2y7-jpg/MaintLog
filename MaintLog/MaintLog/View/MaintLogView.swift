@@ -6,13 +6,37 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MaintLogView: View {
+    
+    @Bindable var log: MaintLogDataModel
     var body: some View {
-        Text("MaintLOgView")
+        Text(log.mainLogNumber)
     }
 }
 
+
 #Preview {
-    MaintLogView()
+    NavigationStack {
+        MaintLogView(
+            log: MaintLogDataModel(
+                id: UUID(),
+                mainLogNumber: "A12B3C-WAW",
+                departurePreviousAirport: "KRK",
+                arrivalPreviousAirport: "WAW",
+                flightNumberPreviousFlight: "LO3910",
+                aircraftRegistration: "SP-LWA",
+                aircraftType: "B737",
+                aircraftSubType: "B737-800",
+                referenceNo: "REF-001",
+                station: "WAW",
+                status: "open"
+            )
+        )
+    }
+    .modelContainer(
+        for: MaintLogDataModel.self,
+        inMemory: true
+    )
 }

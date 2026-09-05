@@ -11,18 +11,26 @@ import Combine
 
 @MainActor final class MaintLogFormVM: ObservableObject {
     
+    //--GLOBAL
     @Published var saveError: String?
     
-    private func createMaintLogID(arrivalPreviousAirport: String) -> (id: UUID, number: String){
+    //--ID
+    private var currentMaintLogID = 1000
+    
+    
+    //--FUNC
+    private func createMaintLogID(arrivalPreviousAirport: String) -> (id: UUID, number: String)
+    {
+       let id = UUID()
         
-        let id = UUID()
+        currentMaintLogID += 1
         
-        let idPart = id.uuidString.prefix(6).uppercased()
+       // let idPart = id.uuidString.prefix(6).uppercased()
         let stationPart = arrivalPreviousAirport.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         
         return(
             id: id,
-            number: "\(idPart)-\(stationPart)"
+            number: "\(currentMaintLogID)-\(stationPart)"
         )
     }
     

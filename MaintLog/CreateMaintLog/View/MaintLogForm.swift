@@ -288,9 +288,8 @@ extension MaintLogForm{
                     .padding(.horizontal, -15)
                     .padding(.top, -10)
                     
-                    arrivalDateLabel()
+                    departureDateLabel()
                         .padding(.horizontal, 0)
-                    //do zmiany 
                 }
                     .padding(.horizontal,20)
                     .padding(.top, 10)

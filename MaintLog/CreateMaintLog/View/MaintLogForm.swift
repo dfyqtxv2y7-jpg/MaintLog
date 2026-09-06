@@ -33,7 +33,7 @@ struct MaintLogForm: View {
     @State private var aircraftSubType = ""
     @State private var referenceNo = ""
     @State private var station = ""
-    @State private var status = "open"
+  //  @State private var status = "open"
     
     //--ALERT
     @State private var showResetAlert = false
@@ -113,7 +113,7 @@ struct MaintLogForm: View {
                                 aircraftSubType: aircraftSubType,
                                 referenceNo: referenceNo,
                                 station: station,
-                                status: status,
+                           //     status: status,
                                 customer: selectedCustomer
                                 )
                         } label: {
@@ -685,7 +685,7 @@ extension MaintLogForm{
          aircraftSubType = ""
          referenceNo = ""
          station = ""
-         status = "open"
+      //   status = "open"
          customerSearch = ""
         
          showResetAlert = true

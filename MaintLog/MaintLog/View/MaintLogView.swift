@@ -44,13 +44,20 @@ struct MaintLogView: View {
                                 .frame(width: 50, height: 50)
                             
                         Divider()
+                                .padding(.vertical, 10)
                         
                             VStack{
                                 Text("\(log.aircraftRegistration)  ・  \(log.aircraftType)")
                                     .font(Font.title3)
                                     .fontWeight(.semibold)
                                 Text("\(log.customer?.name)" ?? "N/A")
+                                
                             }
+                            
+                            Divider()
+                                    .padding(.vertical, 10)
+                            
+                            Text(log.status)
                         }
                     }
                 

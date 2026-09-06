@@ -34,15 +34,15 @@ enum MaintLogStatus: String, CaseIterable {
     var statusBadge: Color {
         switch self {
         case .open:
-            return .green
+            return .successForeground
         case .inProgress:
-            return .yellow
+            return .progressForeground
         case .pending:
-            return .orange
+            return .warningForeground
         case .onHold:
-            return .purple
+            return .holdForeground
         case .closed:
-            return .red
+            return .dangerForeground
         }
     }
 }

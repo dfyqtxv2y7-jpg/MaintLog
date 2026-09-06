@@ -35,6 +35,7 @@ struct MaintLogView: View {
                 
                 logHeader()
                 
+                centerContainer()
             }
                     .toolbar{
                         ToolbarItem(placement: .principal) {
@@ -116,4 +117,31 @@ struct MaintLogView: View {
             }
         }
     }
+        
+        private func centerContainer() -> some View {
+            
+            RoundedRectangle(cornerRadius: 25)
+                .stroke(Color.theme.borderDefault)
+                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 300, maxHeight: 700)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .foregroundStyle(Color.theme.surfaceSecondary)
+                .overlay(alignment: .topLeading){
+                    VStack(alignment: .leading){
+                        Text("Maintenance Action")
+                            .foregroundStyle(Color.theme.textPrimary)
+                            .font(Font.callout)
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 40)
+                            .padding(.top, 25)
+                        
+                        Divider()
+                            .padding(.horizontal, 40)
+                        
+                        
+                        
+                    }
+                }
+
+        }
 }

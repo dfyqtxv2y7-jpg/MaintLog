@@ -24,7 +24,9 @@ struct MaintLogView: View {
     @State private var aircraftSubType = ""
     @State private var referenceNo = ""
     @State private var station = ""
-    @State private var status = "inprogress"
+   // @State private var status = "OPEN"
+    
+   // @State private var statusColor: Color
     
     @Bindable var log: MaintLogDataModel
     var body: some View {
@@ -57,7 +59,13 @@ struct MaintLogView: View {
                             Divider()
                                     .padding(.vertical, 10)
                             
-                            Text(log.status)
+                           Rectangle()
+                                .stroke(MaintLogStatus(rawValue: log.status)?.statusBadge ?? .gray)
+                                .frame(width: 75, height: 30)
+                                .overlay{
+                                    Text("\(log.status)")
+                                        .foregroundStyle(MaintLogStatus(rawValue: log.status)?.statusBadge ?? .gray)
+                                }
                         }
                     }
                 
@@ -90,7 +98,7 @@ struct MaintLogView: View {
                 aircraftSubType: "B737-800",
                 referenceNo: "REF-001",
                 station: "WAW",
-                status: "open",
+                status: "OPEN",
                 customer: nil
             )
         )

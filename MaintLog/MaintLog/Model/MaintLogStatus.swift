@@ -30,4 +30,19 @@ enum MaintLogStatus: String, CaseIterable {
             return "Closed"
         }
     }
+    
+    var statusBadge: Color {
+        switch self {
+        case .open:
+            return .green
+        case .inProgress:
+            return .yellow
+        case .pending:
+            return .orange
+        case .onHold:
+            return .purple
+        case .closed:
+            return .red
+        }
+    }
 }

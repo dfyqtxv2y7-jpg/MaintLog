@@ -16,6 +16,13 @@ final class MaintLogDataModel {
     @Attribute(.unique)
     var mainLogNumber: String
     
+    //--RELATION
+    @Relationship(
+        deleteRule: .cascade,
+        inverse: \OilUpliftData.maintLog
+    )
+    var oilUplift: OilUpliftData?
+    
     
     //--FLIGHT
     var departurePreviousAirport: String

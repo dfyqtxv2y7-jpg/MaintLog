@@ -42,8 +42,8 @@ struct MaintLogView: View {
                             Text("\(log.mainLogNumber)")
                                 .font(Font.largeTitle.bold())
                                 .fontWeight(.semibold)
-                        }
                     }
+                }
             }
         }
     }
@@ -122,7 +122,7 @@ struct MaintLogView: View {
             
             RoundedRectangle(cornerRadius: 25)
                 .stroke(Color.theme.borderDefault)
-                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 300, maxHeight: 700)
+                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 500, maxHeight: 700)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .foregroundStyle(Color.theme.surfaceSecondary)
@@ -138,10 +138,44 @@ struct MaintLogView: View {
                         Divider()
                             .padding(.horizontal, 40)
                         
-                        
-                        
-                    }
-                }
+                        Button{
+                            
+                        } label: {
+                            RoundedRectangle(cornerRadius: 25)
+                                .stroke(Color.theme.borderDefault)
+                                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: 100)
+                                .foregroundStyle(Color.theme.surfaceSecondary)
+                                .overlay{
+                                    HStack(spacing: 0) {
+                                        Image(systemName: "drop.degreesign.fill")
+                                            .font(.title)
+                                            .fontWeight(.bold)
+                                            .foregroundStyle(Color.theme.textPrimary)
+                                            .frame(width:64)
 
+                                        Divider()
+                                            .padding(.vertical, 10)
+                                        
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("OIL UPLIFT")
+                                                .font(.title3)
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(Color.theme.textPrimary)
+
+                                            Text("TAP TO ADD OR SWIPE")
+                                                .font(.caption)
+                                                .fontWeight(.semibold)
+                                                .foregroundStyle(Color.theme.textSecondary)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.leading, 16)
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 10)
+                }
+            }
         }
+    }
 }

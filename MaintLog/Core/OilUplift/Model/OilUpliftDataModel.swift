@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import Combine
 
-@Model final class OilUpliftData {
+@Model final class OilUpliftDataModel {
     
     @Attribute(.unique)
     var id: UUID

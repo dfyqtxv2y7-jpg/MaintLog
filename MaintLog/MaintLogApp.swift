@@ -17,7 +17,8 @@ struct MaintLogApp: App {
         .modelContainer(
             for: [
                 MaintLogDataModel.self,
-                CustomerDataModel.self
+                CustomerDataModel.self,
+                OilUpliftDataModel.self
             ]
         )
     }

@@ -19,9 +19,9 @@ final class MaintLogDataModel {
     //--RELATION
     @Relationship(
         deleteRule: .cascade,
-        inverse: \OilUpliftData.maintLog
+        inverse: \OilUpliftDataModel.maintLog
     )
-    var oilUplift: OilUpliftData?
+    var oilUplift: OilUpliftDataModel?
     
     
     //--FLIGHT

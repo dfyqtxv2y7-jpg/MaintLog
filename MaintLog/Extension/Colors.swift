@@ -42,4 +42,8 @@ struct ColorTheme{
     let successBackground = Color("successBackground")
     let warningBackground = Color("warningBackground")
     let successForeground = Color("successForeground")
+    let progressForeground = Color("progressForeground")
+    let progressBackground = Color("progressBackground")
+    let holdForeground = Color("holdForeground")
+    let holdBackground = Color("holdBackground")
 }

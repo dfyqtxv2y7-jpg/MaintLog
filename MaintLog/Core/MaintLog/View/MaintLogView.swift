@@ -25,6 +25,9 @@ struct MaintLogView: View {
     @State private var referenceNo = ""
     @State private var station = ""
     
+    //--SHEET
+    @State private var showOilSheet = false
+    
     
     @Bindable var log: MaintLogDataModel
     var body: some View {
@@ -139,7 +142,7 @@ struct MaintLogView: View {
                             .padding(.horizontal, 40)
                         
                         Button{
-                            
+                            showOilSheet = true
                         } label: {
                             RoundedRectangle(cornerRadius: 25)
                                 .stroke(Color.theme.borderDefault)
@@ -176,6 +179,9 @@ struct MaintLogView: View {
                     .padding(.vertical, 10)
                 }
             }
+                    .sheet(isPresented: $showOilSheet) {
+                        OIlSheetView()
+                    }
         }
     }
 }

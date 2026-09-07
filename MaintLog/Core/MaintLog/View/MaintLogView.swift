@@ -9,6 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct MaintLogView: View {
+
+    @Environment(\.modelContext)
+    private var modelContext
+
+    @StateObject private var viewModel = MaintLogVM()
     
     @State private var departurePreviousAirport = ""
     @State private var departurePreviousTime: Date? = nil
@@ -28,7 +33,12 @@ struct MaintLogView: View {
     //--SHEET
     @State private var showOilSheet = false
     
+    //--BUTTON
+    @State private var showScreenAfterSavingMaintLog: Bool = false
     
+    
+    
+    //--UI
     @Bindable var log: MaintLogDataModel
     var body: some View {
         ZStack {
@@ -40,18 +50,47 @@ struct MaintLogView: View {
                 
                 centerContainer()
                 
-                saveMaintLogButton()
+
+                Button {
+                   let savedRecord = viewModel.saveMaintLogRecord(
+                        log,
+                        in: modelContext
+                    )
+                    if savedRecord {
+                        showScreenAfterSavingMaintLog = true
+                    }
+                } label: {
+                    saveMaintLogButton()
+                }
             }
-                    .toolbar{
-                        ToolbarItem(placement: .principal) {
-                            Text("\(log.mainLogNumber)")
-                                .font(Font.largeTitle.bold())
-                                .fontWeight(.semibold)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("\(log.mainLogNumber)")
+                        .font(Font.largeTitle.bold())
+                        .fontWeight(.semibold)
                     }
                 }
             }
+        .navigationDestination(isPresented: $showScreenAfterSavingMaintLog) {
+            HomeView()
         }
+            .alert(
+                "Could not save MaintLog",
+                isPresented: Binding(
+                    get: { viewModel.saveError != nil },
+                    set: { isPresented in
+                        if !isPresented {
+                            viewModel.saveError = nil
+                        }
+                    }
+                )
+            ) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(viewModel.saveError ?? "Unknown error")
+            }
     }
+}
     
     
     #Preview {
@@ -194,7 +233,7 @@ struct MaintLogView: View {
                 .foregroundStyle(Color.theme.actionPrimary)
                 .overlay{
                   //  Spacer()
-                    Text("Create new MainLog")
+                    Text("Save MaintLog")
                         .foregroundStyle(Color.theme.textInverse)
                   //  Spacer()
                 }

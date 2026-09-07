@@ -9,48 +9,50 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    
-    @Environment(\.modelContext) private var modelContext
-    
-    //-- SORT + FILTER VIEW
-    
-    private enum HomeFilterViewState:String, CaseIterable, Identifiable {
+
+    private enum HomeFilterViewState: String, CaseIterable, Identifiable {
         case all = "ALL"
         case open = "OPEN"
         case closed = "CLOSED"
-        
+
         var id: Self { self }
     }
-    
-    @Query (sort: \MaintLogDataModel.createdAt, order: .reverse)
+
+    @Query(sort: \MaintLogDataModel.createdAt, order: .reverse)
     private var records: [MaintLogDataModel]
-    
+
     @State private var selectedFilterView: HomeFilterViewState = .all
-    
+
     private var filteredRecords: [MaintLogDataModel] {
         switch selectedFilterView {
         case .all:
             return records
         case .open:
-            return records.filter{
+            return records.filter {
                 $0.status == MaintLogStatus.open.rawValue
             }
         case .closed:
-            return records.filter{
+            return records.filter {
                 $0.status == MaintLogStatus.closed.rawValue
             }
         }
     }
-    
-    
 
     var body: some View {
-        VStack {
-            List {
-                
+        VStack(spacing: 0) {
+            Picker("MaintLog status", selection: $selectedFilterView) {
+                ForEach(HomeFilterViewState.allCases) { filter in
+                    Text(filter.rawValue)
+                        .tag(filter)
+                }
             }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            .padding(.top)
+
+            MaintLogListView(records: filteredRecords)
             .scrollContentBackground(.hidden)
-            .navigationTitle("Hello <User> 👋")
+
             NavigationLink(value: HomeRoute.createMaintLog) {
                 RoundedRectangle(cornerRadius: 25)
                     .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
@@ -59,10 +61,11 @@ struct HomeView: View {
                     .overlay{
                         Text("Create new MainLog")
                             .foregroundStyle(Color.theme.textInverse)
-                }
+                    }
             }
         }
         .background(Color.theme.surfacePrimary)
+        .navigationTitle("Hello <User> 👋")
     }
 }
 
@@ -70,5 +73,12 @@ struct HomeView: View {
     NavigationStack {
         HomeView()
     }
-  //  HomeView()
+    .modelContainer(
+        for: [
+            MaintLogDataModel.self,
+            CustomerDataModel.self,
+            OilUpliftDataModel.self
+        ],
+        inMemory: true
+    )
 }

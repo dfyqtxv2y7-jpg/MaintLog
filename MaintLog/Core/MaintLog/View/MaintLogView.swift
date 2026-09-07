@@ -39,6 +39,8 @@ struct MaintLogView: View {
                 logHeader()
                 
                 centerContainer()
+                
+                saveMaintLogButton()
             }
                     .toolbar{
                         ToolbarItem(placement: .principal) {
@@ -184,4 +186,17 @@ struct MaintLogView: View {
                     }
         }
     }
+        
+        private func saveMaintLogButton() -> some View {
+            RoundedRectangle(cornerRadius: 10)
+                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 75, maxHeight: 75)
+                .padding(.horizontal, 20)
+                .foregroundStyle(Color.theme.actionPrimary)
+                .overlay{
+                  //  Spacer()
+                    Text("Create new MainLog")
+                        .foregroundStyle(Color.theme.textInverse)
+                  //  Spacer()
+                }
+        }
 }

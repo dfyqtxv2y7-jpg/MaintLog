@@ -10,6 +10,8 @@ import SwiftData
 
 struct MaintLogView: View {
 
+    @Binding var path: NavigationPath
+
     @Environment(\.modelContext)
     private var modelContext
 
@@ -33,11 +35,6 @@ struct MaintLogView: View {
     //--SHEET
     @State private var showOilSheet = false
     
-    //--BUTTON
-    @State private var showScreenAfterSavingMaintLog: Bool = false
-    
-    
-    
     //--UI
     @Bindable var log: MaintLogDataModel
     var body: some View {
@@ -57,7 +54,7 @@ struct MaintLogView: View {
                         in: modelContext
                     )
                     if savedRecord {
-                        showScreenAfterSavingMaintLog = true
+                        path = NavigationPath()
                     }
                 } label: {
                     saveMaintLogButton()
@@ -71,9 +68,6 @@ struct MaintLogView: View {
                     }
                 }
             }
-        .navigationDestination(isPresented: $showScreenAfterSavingMaintLog) {
-            HomeView()
-        }
             .alert(
                 "Could not save MaintLog",
                 isPresented: Binding(
@@ -96,6 +90,7 @@ struct MaintLogView: View {
     #Preview {
         NavigationStack {
             MaintLogView(
+                path: .constant(NavigationPath()),
                 log: MaintLogDataModel(
                     id: UUID(),
                     mainLogNumber: "WAW-10001",

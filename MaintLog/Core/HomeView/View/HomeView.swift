@@ -11,6 +11,38 @@ import SwiftData
 struct HomeView: View {
     
     @Environment(\.modelContext) private var modelContext
+    
+    //-- SORT + FILTER VIEW
+    
+    private enum HomeFilterViewState:String, CaseIterable, Identifiable {
+        case all = "ALL"
+        case open = "OPEN"
+        case closed = "CLOSED"
+        
+        var id: Self { self }
+    }
+    
+    @Query (sort: \MaintLogDataModel.createdAt, order: .reverse)
+    private var records: [MaintLogDataModel]
+    
+    @State private var selectedFilterView: HomeFilterViewState = .all
+    
+    private var filteredRecords: [MaintLogDataModel] {
+        switch selectedFilterView {
+        case .all:
+            return records
+        case .open:
+            return records.filter{
+                $0.status == MaintLogStatus.open.rawValue
+            }
+        case .closed:
+            return records.filter{
+                $0.status == MaintLogStatus.closed.rawValue
+            }
+        }
+    }
+    
+    
 
     var body: some View {
         VStack {
@@ -19,9 +51,7 @@ struct HomeView: View {
             }
             .scrollContentBackground(.hidden)
             .navigationTitle("Hello <User> 👋")
-            NavigationLink{
-                MaintLogForm()
-            } label: {
+            NavigationLink(value: HomeRoute.createMaintLog) {
                 RoundedRectangle(cornerRadius: 25)
                     .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
                     .padding()

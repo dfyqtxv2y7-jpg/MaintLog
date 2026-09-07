@@ -19,6 +19,7 @@ import Combine
         in modelContext: ModelContext,
         updatedBy: String? = nil
     ) -> Bool {
+        log.status = MaintLogStatus.closed.rawValue
         log.updatedAt = Date()
 
         if let updatedBy {

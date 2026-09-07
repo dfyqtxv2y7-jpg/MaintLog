@@ -9,7 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct MaintLogForm: View {
-    
+
+    @Binding var path: NavigationPath
     
     //--SWIFT DATA + ENV
     @Query(sort: \CustomerDataModel.name)
@@ -51,7 +52,6 @@ struct MaintLogForm: View {
     
     //--VM/FUNC
     @StateObject private var viewModel = MaintLogFormVM()
-    @State private var createdLog: MaintLogDataModel?
     
     
     var body: some View {
@@ -97,7 +97,7 @@ struct MaintLogForm: View {
                         
                         //--
                         Button(role: .cancel){
-                            createdLog = viewModel.saveMaintLogForm(
+                            if let createdLog = viewModel.saveMaintLogForm(
                                 in: modelContext,
                                 departurePreviousAirport: departurePreviousAirport,
                                 departurePreviousTime: departurePreviousTime,
@@ -115,7 +115,9 @@ struct MaintLogForm: View {
                                 station: station,
                            //     status: status,
                                 customer: selectedCustomer
-                                )
+                            ) {
+                                path.append(HomeRoute.maintLog(createdLog))
+                            }
                         } label: {
                             RoundedRectangle(cornerRadius: 25)
                                 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
@@ -127,12 +129,6 @@ struct MaintLogForm: View {
                                         .foregroundStyle(Color.theme.textInverse)
                                     Spacer()
                             }
-                        }
-                        .navigationDestination(item: $createdLog) {
-                            log in
-                            MaintLogView(
-                                log: log
-                            )
                         }
                     }
 
@@ -163,7 +159,7 @@ struct MaintLogForm: View {
 #Preview {
 
     NavigationStack{
-        MaintLogForm()
+        MaintLogForm(path: .constant(NavigationPath()))
             .modelContainer(
                 for: [
                     MaintLogDataModel.self,
@@ -177,7 +173,7 @@ struct MaintLogForm: View {
 #Preview {
 
     NavigationStack{
-        MaintLogForm()
+        MaintLogForm(path: .constant(NavigationPath()))
             .modelContainer(
                 for: [
                     MaintLogDataModel.self,

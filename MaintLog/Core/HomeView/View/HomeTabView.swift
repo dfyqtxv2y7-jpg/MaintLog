@@ -45,6 +45,9 @@ struct HomeTabView: View {
             }
         }
         .tint(Color.theme.actionPressed)
+        .onAppear{
+            print("[VIEW] HomeTabView Appear")
+        }
     }
 }
 

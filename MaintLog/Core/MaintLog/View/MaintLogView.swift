@@ -68,6 +68,9 @@ struct MaintLogView: View {
                     }
                 }
             }
+        .onAppear{
+            print("[VIEW] MaintLogView Appear")
+        }
             .alert(
                 "Could not save MaintLog",
                 isPresented: Binding(

@@ -72,6 +72,9 @@ struct HomeView: View {
         }
         .background(Color.theme.surfacePrimary)
         .navigationTitle("Hello <User> 👋")
+        .onAppear{
+            print("[VIEW] HomeView Appear")
+        }
     }
 }
 

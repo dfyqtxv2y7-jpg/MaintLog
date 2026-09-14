@@ -9,7 +9,12 @@ import SwiftUI
 
 struct OIlSheetView: View {
     var body: some View {
-        Text("hello oil  sheet")
+        VStack{
+            Text("hello oil  sheet")
+        }
+        .onAppear{
+            print("[VIEW] OilSheet Appear")
+        }
     }
 }
 

@@ -141,6 +141,9 @@ struct MaintLogForm: View {
                 Text("ALL FIELD HAS BEEN RESET")
             }
         }
+        .onAppear{
+            print("[VIEW] MaintFormView Appear")
+        }
         
         .task {
             do {

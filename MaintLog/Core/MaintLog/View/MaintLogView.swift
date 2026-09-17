@@ -39,10 +39,16 @@ struct MaintLogView: View {
     @Bindable var log: MaintLogDataModel
     var body: some View {
         ZStack {
-            Color.theme.surfacePrimary
+            Color.theme.surfaceSecondary
                 .ignoresSafeArea()
             ScrollView {
-                
+                Text(log.mainLogNumber)
+                    .font(.largeTitle.weight(.semibold))
+                    .foregroundStyle(Color.theme.textPrimary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 20)
+                    .padding(.bottom, 8)
+
                 logHeader()
                 
                 centerContainer()
@@ -62,12 +68,11 @@ struct MaintLogView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("\(log.mainLogNumber)")
-                        .font(Font.largeTitle.bold())
-                        .fontWeight(.semibold)
-                    }
+                    Text("Maint / Work Log")
+                        .font(.headline)
                 }
             }
+        }
         .onAppear{
             print("[VIEW] MaintLogView Appear")
         }
@@ -96,17 +101,21 @@ struct MaintLogView: View {
                 path: .constant(NavigationPath()),
                 log: MaintLogDataModel(
                     id: UUID(),
-                    mainLogNumber: "WAW-10001",
+                    mainLogNumber: "MWL-2026-084",
                     departurePreviousAirport: "KRK",
                     arrivalPreviousAirport: "WAW",
                     flightNumberPreviousFlight: "LO3910",
-                    aircraftRegistration: "SP-LWA",
-                    aircraftType: "B737",
-                    aircraftSubType: "B737-800",
+                    aircraftRegistration: "SP-LRA",
+                    aircraftType: "B787-8",
+                    aircraftSubType: "B787-8",
                     referenceNo: "REF-001",
                     station: "WAW",
                     status: "OPEN",
-                    customer: nil
+                    customer: CustomerDataModel(
+                        name: "LOT Polish Airlines",
+                        iataCode: "LO",
+                        icaoCode: "LOT"
+                    )
                 )
             )
         }
@@ -121,53 +130,61 @@ struct MaintLogView: View {
     extension MaintLogView{
         
         private func logHeader() -> some View {
-            
-            RoundedRectangle(cornerRadius: 25)
-                .stroke(Color.theme.borderDefault)
-                .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: 325)
-                .padding(.horizontal, 20)
-                .foregroundStyle(Color.theme.surfaceSecondary)
-                .overlay{
-                    HStack{
-                        Image(systemName: "airplane")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                        
-                        Divider()
-                            .padding(.vertical, 10)
-                        
-                        VStack{
-                            Text("\(log.aircraftRegistration)  ・  \(log.aircraftType)")
-                                .font(Font.title3)
-                                .fontWeight(.semibold)
-                            Text("\(log.customer?.name)" ?? "N/A")
-                            
-                        }
-                        
-                        Divider()
-                            .padding(.vertical, 10)
-                        
-                        Rectangle()
-                            .stroke(MaintLogStatus(rawValue: log.status)?.statusBadge ?? .gray)
-                            .frame(width: 75, height: 30)
-                            .overlay{
-                                Text("\(log.status)")
-                                    .foregroundStyle(MaintLogStatus(rawValue: log.status)?.statusBadge ?? .gray)
-                                    .fontWeight(.semibold)
-                            
+            let statusColor = MaintLogStatus(rawValue: log.status)?.statusBadge ?? .gray
+
+            return HStack(spacing: 10) {
+                Image(systemName: "airplane")
+                    .font(.system(size: 34, weight: .ultraLight))
+                    .foregroundStyle(Color.theme.textPrimary)
+                    .frame(width: 42)
+
+                Divider()
+                    .frame(height: 44)
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("\(log.aircraftRegistration)  ·  \(log.aircraftType)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Color.theme.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+
+                    Text(log.customer?.name ?? "N/A")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Color.theme.textSecondary)
+                        .lineLimit(1)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text(log.status)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(statusColor)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .frame(width: 90, height: 30)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(statusColor)
+                    }
             }
+            .padding(.horizontal, 14)
+            .frame(maxWidth: .infinity)
+            .frame(height: 88)
+            .background(Color.theme.surfacePrimary, in: RoundedRectangle(cornerRadius: 14))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.theme.borderDefault)
+            }
+            .padding(.horizontal, 20)
         }
-    }
         
         private func centerContainer() -> some View {
             
-            RoundedRectangle(cornerRadius: 25)
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.theme.surfacePrimary)
                 .stroke(Color.theme.borderDefault)
                 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 500, maxHeight: 700)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
-                .foregroundStyle(Color.theme.surfaceSecondary)
                 .overlay(alignment: .topLeading){
                     VStack(alignment: .leading){
                         Text("Maintenance Action")
@@ -186,7 +203,7 @@ struct MaintLogView: View {
                             RoundedRectangle(cornerRadius: 25)
                                 .stroke(Color.theme.borderDefault)
                                 .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: 100)
-                                .foregroundStyle(Color.theme.surfaceSecondary)
+                                .foregroundStyle(Color.theme.surfacePrimary)
                                 .overlay{
                                     HStack(spacing: 0) {
                                         Image(systemName: "drop.degreesign.fill")

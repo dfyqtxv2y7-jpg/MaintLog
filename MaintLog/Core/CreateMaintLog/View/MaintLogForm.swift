@@ -56,7 +56,7 @@ struct MaintLogForm: View {
     
     var body: some View {
         ZStack{
-            Color.theme.surfacePrimary
+            Color.theme.surfaceSecondary
                 .ignoresSafeArea()
             ScrollView {
                 VStack{

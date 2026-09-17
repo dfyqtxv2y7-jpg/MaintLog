@@ -42,38 +42,43 @@ struct HomeView: View {
 
     var body: some View {
         
-        //--UPPER TAB
-        VStack(spacing: 0) {
-            Picker("MaintLog status", selection: $selectedFilterView) {
-                ForEach(HomeFilterViewState.allCases) { filter in
-                    Text(filter.rawValue)
-                        .tag(filter)
+        ZStack {
+            //--COLOR
+            Color.theme.surfacePrimary
+                .ignoresSafeArea()
+            //--UPPER TAB
+            VStack(spacing: 0) {
+                Picker("MaintLog status", selection: $selectedFilterView) {
+                    ForEach(HomeFilterViewState.allCases) { filter in
+                        Text(filter.rawValue)
+                            .tag(filter)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.top)
+                
+                //--ROW
+                MaintLogListView(records: filteredRecords)
+                    .scrollContentBackground(.hidden)
+                
+                //--BUTTON
+                NavigationLink(value: HomeRoute.createMaintLog) {
+                    RoundedRectangle(cornerRadius: 25)
+                        .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
+                        .padding()
+                        .foregroundStyle(Color.theme.actionPrimary)
+                        .overlay{
+                            Text("Create new MainLog")
+                                .foregroundStyle(Color.theme.textInverse)
+                        }
                 }
             }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
-            .padding(.top)
-
-            //--ROW
-            MaintLogListView(records: filteredRecords)
-            .scrollContentBackground(.hidden)
-
-            //--BUTTON
-            NavigationLink(value: HomeRoute.createMaintLog) {
-                RoundedRectangle(cornerRadius: 25)
-                    .frame(minWidth: 100, maxWidth: .infinity, minHeight: 50, maxHeight: 75)
-                    .padding()
-                    .foregroundStyle(Color.theme.actionPrimary)
-                    .overlay{
-                        Text("Create new MainLog")
-                            .foregroundStyle(Color.theme.textInverse)
-                    }
+            .background(Color.theme.surfacePrimary)
+            .navigationTitle("Hello <User> 👋")
+            .onAppear{
+                print("[VIEW] HomeView Appear")
             }
-        }
-        .background(Color.theme.surfacePrimary)
-        .navigationTitle("Hello <User> 👋")
-        .onAppear{
-            print("[VIEW] HomeView Appear")
         }
     }
 }

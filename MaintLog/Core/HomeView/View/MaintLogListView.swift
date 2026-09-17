@@ -15,14 +15,7 @@ struct MaintLogListView: View {
             NavigationLink(value: HomeRoute.maintLog(record)) {
                 MaintLogRow(record: record)
             }
-            .listRowInsets(
-                EdgeInsets(
-                    top: 6,
-                    leading: 6,
-                    bottom: 6,
-                    trailing: 6
-                )
-                )
+            .foregroundStyle(Color.theme.surfaceSecondary)
         }
     }
 }
@@ -31,8 +24,8 @@ private struct MaintLogRow: View {
     let record: MaintLogDataModel
 
     var body: some View {
+        ZStack {
             HStack {
-                
                 VStack(alignment: .leading) {
                     Text(record.mainLogNumber)
                         .font(.title3)
@@ -54,7 +47,7 @@ private struct MaintLogRow: View {
                         .foregroundStyle(Color.theme.textSecondary)
                 }
                 Spacer()
-
+                
                 Text("\(record.status)")
                     .foregroundStyle(MaintLogStatus(rawValue: record.status)?.statusBadge ?? .gray)
                     .font(.caption)
@@ -63,20 +56,21 @@ private struct MaintLogRow: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
                     .overlay{
-                                Rectangle()
-                        .stroke(MaintLogStatus(rawValue:record.status)?.statusBadge ?? .gray)
-                        .frame(minWidth: 20, maxWidth: 80, minHeight: 20, maxHeight: 25)
-                }
+                        Rectangle()
+                            .stroke(MaintLogStatus(rawValue:record.status)?.statusBadge ?? .gray)
+                            .frame(minWidth: 20, maxWidth: 80, minHeight: 20, maxHeight: 25)
+                    }
             }
             .padding()
-            .overlay {
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.theme.borderDefault, lineWidth: 1)
-                    .frame(minWidth: 100,
-                           maxWidth: .infinity,
-                           minHeight:100, maxHeight: 100
-                           )
         }
+//            .overlay {
+//                RoundedRectangle(cornerRadius: 10)
+//                    .stroke(Color.theme.borderDefault, lineWidth: 1)
+//                    .frame(minWidth: 100,
+//                           maxWidth: .infinity,
+//                           minHeight:100, maxHeight: 100
+//                           )
+//        }
     }
 }
 

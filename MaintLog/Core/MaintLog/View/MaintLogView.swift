@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct MaintLogView: View {
+    
+    //--LOGIC
+   // let log: MaintLogDataModel
 
     @Binding var path: NavigationPath
 
@@ -34,6 +37,7 @@ struct MaintLogView: View {
     
     //--SHEET
     @State private var showOilSheet = false
+    
     
     //--UI
     @Bindable var log: MaintLogDataModel
@@ -236,7 +240,7 @@ struct MaintLogView: View {
                 }
             }
                     .sheet(isPresented: $showOilSheet) {
-                        OIlSheetView()
+                        OIlSheetView(log: log)
                     }
         }
     }

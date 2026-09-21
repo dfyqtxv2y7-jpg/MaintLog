@@ -14,6 +14,16 @@ import Combine
     @Attribute(.unique)
     var id: UUID
     
+    //-- RELATION
+    var maintLog: MaintLogDataModel?
+    
+    @Relationship(
+        deleteRule: .cascade,
+        inverse:\OilUpliftEntriesDataModel.oiluplift
+    )
+    var entries: [OilUpliftEntriesDataModel] = []
+    
+    
     var e1QTY: Double
     var e2QTY: Double
     var e3QTY: Double
@@ -31,7 +41,7 @@ import Combine
     
     
     //-- RELATION    
-    var maintLog: [MaintLogDataModel] = []
+//    var maintLog: [MaintLogDataModel] = []
     
     init(id: UUID,
          e1QTY: Double,

@@ -4,6 +4,12 @@
 //  Created by Maciek Witanowski on 06/09/2026.
 //
 
+
+//
+//++++++++++++++++++++++++++++++
+// KROK 5
+//++++++++++++++++++++++++++++++
+
 import SwiftUI
 
 struct OIlSheetView: View {
@@ -30,56 +36,80 @@ struct OIlSheetView: View {
 //        GridItem(.flexible(), spacing: 12)
     ]
     
+    enum OilSystem: String, Codable, CaseIterable, Identifiable {
+        case eng1 = "ENG1"
+        case eng2 = "ENG2"
+        case apu = "APU"
+
+        var id: String { rawValue }
+    }
+        
+    //--DM
+    @State private var selectedSystem: OilSystem?
+    @State private var quantityText = ""
+    @State private var selectedUnit: OilUnit = .usQuard
+    @State private var draftEntries: [OilEntryDraft] = []
+    @State private var notes = ""
+    @State private var requireInspection = false
+    
+    
     var body: some View {
         
-        VStack{
+        ZStack {
             
-            Divider()
+            Color.theme.surfaceSecondary
             
-            oilHeader()
-            .padding(.horizontal, 20)
-            .padding(.vertical, 5)
-            
-            Divider()
-            
-            //-- end of header
-            
-            Text("UPLIFTS")
-            
-            LazyVGrid(columns: syetemColumns, alignment: .center, spacing: 12){
+            VStack{
                 
-                ForEach(systemUplift, id: \.self) {
-                    systemUplift in
+                Divider()
+                
+                oilHeader()
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 5)
+                
+                Divider()
+                
+                //-- end of header
+                
+                Text("UPLIFTS")
+                
+                LazyVGrid(columns: syetemColumns, alignment: .center, spacing: 12){
                     
-                    Button{
+                    ForEach(OilSystem.allCases) {
+                        system in
                         
-                    } label: {
-                        Text(systemUplift)
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color.theme.textPrimary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                            .frame(width: 100)
-                            .frame(height: 50)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.theme.borderDefault)
-                                    .fill(
-                                        Color.theme.fieldBackground
-                                    )
-                            )
-                        
-                        
+                        Button{
+                            
+                            selectedSystem = system
+                        } label: {
+                            Text(system.rawValue)
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color.theme.textPrimary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                                .frame(width: 100)
+                                .frame(height: 50)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.theme.borderDefault)
+                                        .fill(
+                                            Color.theme.fieldBackground
+                                        )
+                                )
+                            
+                            
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
+                .padding(.horizontal, 25)
+                
             }
-            .padding(.horizontal, 25)
-        
+            .onAppear{
+                print("[VIEW] OilSheet Appear")
+            }
         }
-        .onAppear{
-            print("[VIEW] OilSheet Appear")
-        }
+        .ignoresSafeArea()
     }
 }
 

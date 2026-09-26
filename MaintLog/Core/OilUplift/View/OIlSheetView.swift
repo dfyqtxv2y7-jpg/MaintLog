@@ -36,13 +36,13 @@ struct OIlSheetView: View {
 //        GridItem(.flexible(), spacing: 12)
     ]
     
-    enum OilSystem: String, Codable, CaseIterable, Identifiable {
-        case eng1 = "ENG1"
-        case eng2 = "ENG2"
-        case apu = "APU"
-
-        var id: String { rawValue }
-    }
+ //   enum OilSystem: String, Codable, CaseIterable, Identifiable {
+//        case eng1 = "ENG1"
+//        case eng2 = "ENG2"
+//        case apu = "APU"
+//
+//        var id: String { rawValue }
+//    }
         
     //--DM
     @State private var selectedSystem: OilSystem?
@@ -51,6 +51,45 @@ struct OIlSheetView: View {
     @State private var draftEntries: [OilEntryDraft] = []
     @State private var notes = ""
     @State private var requireInspection = false
+    
+    //--oil
+    
+    private var enteredQuantity: Double?{
+        let text = quantityText
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: ",", with: ".")
+        
+        guard let quantity = Double(text),
+            quantity.isFinite,
+            quantity > 0 else {
+            return nil
+        }
+        return quantity
+    }
+    
+    private func addEntry(){
+        guard let system = selectedSystem,
+              let quantity = enteredQuantity else {
+            return
+        }
+        
+        if let index = draftEntries.firstIndex(where:
+                                                { $0.system == system}
+        ) {
+            draftEntries[index].quantity = quantity
+            draftEntries[index].unit = selectedUnit
+        } else {
+            draftEntries.append(
+                        OilEntryDraft(
+                            system: system,
+                            quantity: quantity,
+                            unit: selectedUnit
+                        )
+                    )
+        }
+        selectedSystem = nil
+        quantityText = ""
+    }
     
     
     var body: some View {
@@ -103,6 +142,30 @@ struct OIlSheetView: View {
                     }
                 }
                 .padding(.horizontal, 25)
+                
+                if let selectedSystem {
+                    VStack(alignment: .leading, spacing: 12){
+                        Text("Amount of \(selectedSystem.rawValue)")
+                        
+                        TextField("Put amount", text: $quantityText)
+                            .keyboardType(.decimalPad)
+                            .textFieldStyle(.roundedBorder)
+                        
+                        Picker("unit", selection: $selectedUnit){
+                            ForEach(OilUnit.allCases) { unit in
+                                Text(unit.title)
+                                    .tag(unit)
+                            }
+                            
+                            Button("SAVE"){
+                                addEntry()
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        
+                    }
+                    
+                }
                 
             }
             .onAppear{

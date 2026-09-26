@@ -11,6 +11,7 @@
 //++++++++++++++++++++++++++++++
 
 import SwiftUI
+import SwiftData
 
 struct OIlSheetView: View {
     
@@ -35,6 +36,13 @@ struct OIlSheetView: View {
 //        GridItem(.flexible(), spacing: 12),
 //        GridItem(.flexible(), spacing: 12)
     ]
+    
+    //-- ENV
+    
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    
+    @State private var saveError: String?
     
  //   enum OilSystem: String, Codable, CaseIterable, Identifiable {
 //        case eng1 = "ENG1"
@@ -91,6 +99,39 @@ struct OIlSheetView: View {
         quantityText = ""
     }
     
+    private func saveEntries() {
+        // Nie pomijaj ilości, którą użytkownik wpisał, ale jeszcze nie dodał.
+        if !quantityText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            guard selectedSystem != nil, enteredQuantity != nil else {
+                saveError = "Popraw ilość przed zapisaniem."
+                return
+            }
+
+            addEntry()
+        }
+
+        guard !draftEntries.isEmpty else {
+            saveError = "Dodaj przynajmniej jedną pozycję."
+            return
+        }
+
+        // Tutaj:
+        // 1. Pobierz log.oilUplift albo utwórz nowy zestaw.
+        // 2. Przepisz notes i requireInspection.
+        // 3. Dopasuj pozycje draftEntries do modeli według ID.
+        // 4. Utwórz nowe, zaktualizuj istniejące, usuń skasowane.
+        // 5. Ustaw log.hasOilUplift.
+        //
+        // Ten fragment jest celowo szkieletem:
+        // zapis powinien uwzględniać również edycję istniejącego zestawu.
+
+        do {
+            try modelContext.save()
+            dismiss()
+        } catch {
+            saveError = error.localizedDescription
+        }
+    }
     
     var body: some View {
         
@@ -156,17 +197,50 @@ struct OIlSheetView: View {
                                 Text(unit.title)
                                     .tag(unit)
                             }
-                            
-                            Button("SAVE"){
-                                addEntry()
-                            }
+                        }
+                        Button("SAVE"){
+                            addEntry()
                         }
                         .pickerStyle(.segmented)
-                        
                     }
-                    
                 }
                 
+                VStack(alignment: .leading, spacing: 12){
+                    Text("ADDED")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                    ForEach(draftEntries) { entry in
+                        HStack{
+                            
+                            Text(entry.system.rawValue)
+                            
+                            Spacer()
+                            
+                            Text("\(entry.quantity.formatted()) \(entry.unit.title)")
+                            
+                            Button(role: .destructive) {
+                                draftEntries.removeAll() {$0.id == entry.id}
+                            } label: {
+                                Image(systemName: "trash")
+                            }
+                        }
+                        .padding()
+                                .background(
+                                    Color.gray.opacity(0.1),
+                                    in: RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+                
+                DisclosureGroup("Notes & inspection") {
+                    // Pola nadal zmieniają wyłącznie lokalny stan formularza.
+                    TextField("Notes", text: $notes, axis: .vertical)
+                        .lineLimit(3...6)
+
+                    Toggle(
+                        "Inspection required",
+                        isOn: $requireInspection
+                    )
+                }
             }
             .onAppear{
                 print("[VIEW] OilSheet Appear")

@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftData
-import Combine
 
 @Model final class OilUpliftDataModel {
     
@@ -15,7 +14,10 @@ import Combine
     var id: UUID
     
     //-- RELATION
-    var maintLog: MaintLogDataModel?
+    // Istniejąca baza przechowuje relację jako tablicę. Zmiana na pojedynczy obiekt
+    // wymaga osobnej migracji; zachowujemy format, aby nie blokować odczytu danych.
+    // Nowy zestaw jest przypisywany tylko do jednego dokumentu przez OilUpliftStore.
+    var maintLog: [MaintLogDataModel] = []
     
     @Relationship(
         deleteRule: .cascade,
@@ -32,32 +34,29 @@ import Combine
     var unit: String
     var notes: String
     var requireInspection: Bool
-    var performInspectioBy: String
-    var performInspectioAt: Date
+    var performInspectioBy: String?
+    var performInspectioAt: Date?
     var createdBy: String
     var createdAt: Date
     var updatedAt: Date
     var updatedBy: String
     
     
-    //-- RELATION    
-//    var maintLog: [MaintLogDataModel] = []
-    
-    init(id: UUID,
-         e1QTY: Double,
-         e2QTY: Double,
-         e3QTY: Double,
-         e4QTY: Double,
-         APUQTY: Double,
-         unit: String,
-         notes: String,
-         requireInspection: Bool,
-         performInspectioBy: String,
-         performInspectioAt: Date,
+    init(id: UUID = UUID(),
+         e1QTY: Double = 0,
+         e2QTY: Double = 0,
+         e3QTY: Double = 0,
+         e4QTY: Double = 0,
+         APUQTY: Double = 0,
+         unit: String = "",
+         notes: String = "",
+         requireInspection: Bool = false,
+         performInspectioBy: String? = nil,
+         performInspectioAt: Date? = nil,
          createdBy: String,
-         createdAt: Date,
-         updatedAt: Date,
-         updatedBy: String)
+         createdAt: Date = Date(),
+         updatedAt: Date = Date(),
+         updatedBy: String? = nil)
     {
         self.id = id
         self.e1QTY = e1QTY
@@ -73,6 +72,6 @@ import Combine
         self.createdBy = createdBy
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.updatedBy = updatedBy
+        self.updatedBy = updatedBy ?? createdBy
     }
 }

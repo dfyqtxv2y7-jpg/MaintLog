@@ -13,8 +13,9 @@ struct MaintLogForm: View {
     @Binding var path: NavigationPath
     
     //--SWIFT DATA + ENV
-    @Query(sort: \CustomerDataModel.name)
-    private var customer: [CustomerDataModel]
+    // Jawny odczyt po inicjalizacji bazy i przy otwarciu listy nie zależy od odświeżenia @Query.
+    @State private var customer: [CustomerDataModel] = []
+    @State private var customerLoadError: String?
     
     @Environment(\.modelContext)
     private var modelContext
@@ -146,15 +147,7 @@ struct MaintLogForm: View {
         }
         
         .task {
-            do {
-                try CustomerSeedDB.CustomerDB(
-                    into: modelContext
-                )
-            } catch {
-                print(
-                    "Customer seed error: \(error)"
-                )
-            }
+            loadCustomers()
         }
     }
 }
@@ -168,7 +161,7 @@ struct MaintLogForm: View {
                     MaintLogDataModel.self,
                     CustomerDataModel.self
                 ],
-                inMemory: false
+                inMemory: true
         )
     }
 }
@@ -182,7 +175,7 @@ struct MaintLogForm: View {
                     MaintLogDataModel.self,
                     CustomerDataModel.self
                 ],
-                inMemory: false
+                inMemory: true
         )
     }
     .environment(\.colorScheme, .dark)
@@ -563,6 +556,8 @@ extension MaintLogForm{
                 .fontWeight(.semibold)
             
             Button{
+                customerSearch = ""
+                loadCustomers()
                 showCustomerPicker = true
             } label: {
                 HStack(){
@@ -591,6 +586,7 @@ extension MaintLogForm{
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("chooseCustomer")
         }
         .sheet(isPresented: $showCustomerPicker) {
             customerPickerSheet
@@ -627,7 +623,14 @@ extension MaintLogForm{
                 .buttonStyle(.plain)
             }
             .overlay {
-                if filteredCustomers.isEmpty {
+                if let customerLoadError {
+                    VStack(spacing: 12) {
+                        Text("Nie udało się pobrać klientów")
+                        Text(customerLoadError).font(.caption)
+                        Button("Spróbuj ponownie") { loadCustomers() }
+                    }
+                    .padding()
+                } else if filteredCustomers.isEmpty {
                     ContentUnavailableView(
                         "Brak klientów",
                         systemImage: "person.2.slash",
@@ -649,6 +652,19 @@ extension MaintLogForm{
         .presentationDetents([.medium, .large])
     }
     
+    private func loadCustomers() {
+        do {
+            try CustomerSeedDB.CustomerDB(into: modelContext)
+            customer = try modelContext.fetch(
+                FetchDescriptor<CustomerDataModel>(sortBy: [SortDescriptor(\.name)])
+            )
+            customerLoadError = nil
+        } catch {
+            // Awaria odczytu nie powinna udawać pustej bazy klientów.
+            customerLoadError = error.localizedDescription
+        }
+    }
+
     private var filteredCustomers: [CustomerDataModel] {
         customer.filter { customer in
             customer.isActive &&

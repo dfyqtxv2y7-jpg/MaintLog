@@ -100,37 +100,13 @@ struct MaintLogView: View {
     
     
     #Preview {
+        let data = try! MaintLogPreviewData.make()
         NavigationStack {
-            MaintLogView(
-                path: .constant(NavigationPath()),
-                log: MaintLogDataModel(
-                    id: UUID(),
-                    mainLogNumber: "MWL-2026-084",
-                    departurePreviousAirport: "KRK",
-                    arrivalPreviousAirport: "WAW",
-                    flightNumberPreviousFlight: "LO3910",
-                    aircraftRegistration: "SP-LRA",
-                    aircraftType: "B787-8",
-                    aircraftSubType: "B787-8",
-                    referenceNo: "REF-001",
-                    station: "WAW",
-                    status: "OPEN",
-                    customer: CustomerDataModel(
-                        name: "LOT Polish Airlines",
-                        iataCode: "LO",
-                        icaoCode: "LOT"
-                    )
-                )
-            )
+            MaintLogView(path: .constant(NavigationPath()), log: data.log)
         }
-        .modelContainer(
-            for:
-                [MaintLogDataModel.self,
-                 CustomerDataModel.self],
-            inMemory: true
-        )
+        .modelContainer(data.container)
     }
-    
+
     extension MaintLogView{
         
         private func logHeader() -> some View {

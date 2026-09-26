@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum HomeRoute: Hashable {
     case createMaintLog
@@ -53,6 +54,8 @@ struct HomeTabView: View {
 
 #Preview {
     HomeTabView()
-    
+        .modelContainer(for: [MaintLogDataModel.self, CustomerDataModel.self,
+                              OilUpliftDataModel.self, OilUpliftEntriesDataModel.self],
+                        inMemory: true)
 }
 

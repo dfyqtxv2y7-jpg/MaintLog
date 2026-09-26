@@ -13,13 +13,15 @@ struct MaintLogApp: App {
     var body: some Scene {
         WindowGroup {
             HomeTabView()
+                // Cała nawigacja i arkusze dziedziczą jeden kontener z korzenia widoków.
+                .modelContainer(
+                    for: [
+                        MaintLogDataModel.self,
+                        CustomerDataModel.self,
+                        OilUpliftDataModel.self,
+                        OilUpliftEntriesDataModel.self
+                    ]
+                )
         }
-        .modelContainer(
-            for: [
-                MaintLogDataModel.self,
-                CustomerDataModel.self,
-                OilUpliftDataModel.self
-            ]
-        )
     }
 }

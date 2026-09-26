@@ -19,17 +19,6 @@ struct OIlSheetView: View {
     let log: MaintLogDataModel
     
     //--GRID
-    let systemUplift = [
-        "ENG1",
-        "ENG2",
-        "ENG3",
-        "ENG4",
-        "APU",
-        "HYD1",
-        "HYD2",
-        "HYD3"
-    ]
-    
     let syetemColumns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12),
@@ -43,15 +32,8 @@ struct OIlSheetView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var saveError: String?
+    @State private var author = ""
     
- //   enum OilSystem: String, Codable, CaseIterable, Identifiable {
-//        case eng1 = "ENG1"
-//        case eng2 = "ENG2"
-//        case apu = "APU"
-//
-//        var id: String { rawValue }
-//    }
-        
     //--DM
     @State private var selectedSystem: OilSystem?
     @State private var quantityText = ""
@@ -100,7 +82,6 @@ struct OIlSheetView: View {
     }
     
     private func saveEntries() {
-        // Nie pomijaj ilości, którą użytkownik wpisał, ale jeszcze nie dodał.
         if !quantityText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             guard selectedSystem != nil, enteredQuantity != nil else {
                 saveError = "Popraw ilość przed zapisaniem."
@@ -115,18 +96,15 @@ struct OIlSheetView: View {
             return
         }
 
-        // Tutaj:
-        // 1. Pobierz log.oilUplift albo utwórz nowy zestaw.
-        // 2. Przepisz notes i requireInspection.
-        // 3. Dopasuj pozycje draftEntries do modeli według ID.
-        // 4. Utwórz nowe, zaktualizuj istniejące, usuń skasowane.
-        // 5. Ustaw log.hasOilUplift.
-        //
-        // Ten fragment jest celowo szkieletem:
-        // zapis powinien uwzględniać również edycję istniejącego zestawu.
-
         do {
-            try modelContext.save()
+            try OilUpliftStore.saveNew(
+                for: log,
+                entries: draftEntries,
+                notes: notes,
+                requireInspection: requireInspection,
+                author: author,
+                in: modelContext
+            )
             dismiss()
         } catch {
             saveError = error.localizedDescription
@@ -138,8 +116,10 @@ struct OIlSheetView: View {
         ZStack {
             
             Color.theme.surfaceSecondary
-            
-            VStack{
+                .ignoresSafeArea()
+
+            ScrollView {
+            VStack(spacing: 16){
                 
                 Divider()
                 
@@ -198,10 +178,12 @@ struct OIlSheetView: View {
                                     .tag(unit)
                             }
                         }
-                        Button("SAVE"){
+                        .pickerStyle(.segmented)
+
+                        Button("Dodaj do listy") {
                             addEntry()
                         }
-                        .pickerStyle(.segmented)
+                        .disabled(enteredQuantity == nil)
                     }
                 }
                 
@@ -232,7 +214,6 @@ struct OIlSheetView: View {
                 }
                 
                 DisclosureGroup("Notes & inspection") {
-                    // Pola nadal zmieniają wyłącznie lokalny stan formularza.
                     TextField("Notes", text: $notes, axis: .vertical)
                         .lineLimit(3...6)
 
@@ -241,29 +222,52 @@ struct OIlSheetView: View {
                         isOn: $requireInspection
                     )
                 }
+                TextField("Autor zapisu", text: $author)
+                    .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                if log.oilUplift != nil {
+                    Text("Ten MaintLog ma już zapisane uzupełnienia. Edycja nie jest jeszcze dostępna.")
+                        .foregroundStyle(.secondary)
+                }
+
+                Button {
+                    saveEntries()
+                } label: {
+                    Text("Zapisz uzupełnienia")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(log.oilUplift != nil)
+
+                Button("Anuluj", role: .cancel) {
+                    dismiss()
+                }
             }
-            .onAppear{
-                print("[VIEW] OilSheet Appear")
+            .padding()
             }
         }
-        .ignoresSafeArea()
+        .alert(
+            "Zapis uzupełnień",
+            isPresented: Binding(
+                get: { saveError != nil },
+                set: { if !$0 { saveError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { saveError = nil }
+        } message: {
+            Text(saveError ?? "")
+        }
     }
 }
 
 #Preview {
-    OIlSheetView(log: MaintLogDataModel(
-        id: UUID(),
-        mainLogNumber: "MWL-2026-084",
-        departurePreviousAirport: "KRK",
-        arrivalPreviousAirport: "WAW",
-        flightNumberPreviousFlight: "LO3910",
-        aircraftRegistration: "SP-LRA",
-        aircraftType: "B787-8",
-        aircraftSubType: "B787-8",
-        referenceNo: "REF-001",
-        station: "WAW",
-        status: "OPEN"
-    ))
+    let data = try! MaintLogPreviewData.make()
+    OIlSheetView(log: data.log)
+        .modelContainer(data.container)
 }
 
 extension OIlSheetView{
